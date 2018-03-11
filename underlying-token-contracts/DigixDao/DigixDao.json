@@ -1,0 +1,6 @@
+{
+  "types": ["address"],
+  "argument_names": ["config"],
+  "values": ["0xf5666684be76ec85634bdf1bb92d0ed0c62085f9"],
+  "rawdata": "000000000000000000000000f5666684be76ec85634bdf1bb92d0ed0c62085f9"
+}

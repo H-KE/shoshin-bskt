@@ -1,0 +1,19 @@
+{
+  "name": "UnderlyingTokenContracts",
+  "version": "1.0.0",
+  "description": "Underlying token contracts",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CryptoFinInc/underlying-token-contracts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CryptoFinInc/underlying-token-contracts/issues"
+  },
+  "homepage": "https://github.com/CryptoFinInc/underlying-token-contracts#readme",
+  "dependencies": {
+    "ethereumjs-abi": "^0.6.5"
+  }
+}

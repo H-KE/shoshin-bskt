@@ -1,0 +1,6 @@
+{
+  "types": ["address", "address", "address", "address"],
+  "argument_names": ["_owner", "snt", "_contribution", "_sgtExchange"],
+  "values": ["0xa1c957c0210397d2d0296341627b74411756d476"],
+  "rawdata": "000000000000000000000000a1c957c0210397d2d0296341627b74411756d476"
+}

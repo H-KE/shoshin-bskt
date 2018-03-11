@@ -1,0 +1,6 @@
+{
+  "types": ["uint256", "string", "uint8", "string"],
+  "argument_names": ["_initialAmount", "_tokenName", "_decimalUnits", "_tokenSymbol"],
+  "values": ["100000000000000000000000000", "Revain", "18", "R"],
+  "rawdata": ""
+}

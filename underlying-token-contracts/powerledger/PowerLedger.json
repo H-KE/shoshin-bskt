@@ -1,0 +1,6 @@
+{
+  "types": ["address"],
+  "argument_names": ["_migrationInfoSetter"],
+  "values": ["0xd66873c0d33e27a1fd902eea663c285aecd192c1"],
+  "rawdata": "000000000000000000000000d66873c0d33e27a1fd902eea663c285aecd192c1"
+}

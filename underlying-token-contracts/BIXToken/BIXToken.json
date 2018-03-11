@@ -1,0 +1,6 @@
+{
+  "types": ["address"],
+  "argument_names": ["_developer"],
+  "values": ["0x9c29d5bf4c6025501b94fa3708f85f260b9c0bfe"],
+  "rawdata": "0000000000000000000000009c29d5bf4c6025501b94fa3708f85f260b9c0bfe"
+}
