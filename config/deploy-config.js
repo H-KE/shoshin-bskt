@@ -44,7 +44,9 @@ module.exports = {
       "790",
       "2"
     ],
-    "granularity": "10000000000000000",
+    "creationUnit": "10000000000000000",
+    "name": "ERC20Twenty",
+    "symbol": "E20",
     "multisig": {
       "owners": [
         "0xcfba2cb8a4c553c4b358ebc8020a3e0a78cc9d49",
@@ -71,7 +73,9 @@ module.exports = {
       "2440315205646",
       "610078878272"
     ],
-    "granularity": "10000000000000000",
+    "creationUnit": "10000000000000000",
+    "name": "ERC20Twenty",
+    "symbol": "E20",
     "multisig": {
       "owners": [
         "0xcfba2cb8a4c553c4b358ebc8020a3e0a78cc9d49",
@@ -91,7 +95,9 @@ module.exports = {
     "quantities": [
       12
     ],
-    "granularity": "10000000000000",
+    "creationUnit": "10000000000000",
+    "name": "ERC20Twenty",
+    "symbol": "E20",
     "multisig": {
       "owners": [
         "0x627306090abab3a6e1400e9345bc60c78a8bef57",

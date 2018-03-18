@@ -1,7 +1,7 @@
 const Web3 = require("web3");
 
 const config = require("../config/deploy-config.js");
-const basketInfo = require("../build/contracts/BasketToken.json");
+const bsktInfo = require("../build/contracts/BsktToken.json");
 
 const web3 = new Web3();
 
@@ -17,14 +17,14 @@ function generateBytecode(network) {
     return;
   }
 
-  const abi = basketInfo.abi;
-  const bytecode = basketInfo.bytecode;
+  const abi = bsktInfo.abi;
+  const bytecode = bsktInfo.bytecode;
   const tokenAddresses = args.tokenAddresses;
-  const tokenUnits = args.quantities;
-  const granularity = args.granularity;
-  const basketContract = web3.eth.contract(abi);
+  const quantity = args.quantities;
+  const creationUnit = args.creationUnit;
+  const bsktContract = web3.eth.contract(abi);
 
-  const constructorBytecode = basketContract.new.getData(tokenAddresses, tokenUnits, granularity, {data: bytecode});
+  const constructorBytecode = bsktContract.new.getData(tokenAddresses, quantity, creationUnit, {data: bytecode});
   return constructorBytecode;
 };
 

@@ -69,6 +69,7 @@ scTopics
 
 # Secrets file
 config/secrets.json
+config/secrets/
 
 package-lock.json
 

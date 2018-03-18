@@ -3,7 +3,7 @@
     - The test will pull the latest master of the "underlying-token-contracts" repo
     - It will compile all the tokens and add to build/contracts
     - It will look up what args are used for each contract and use them deploy the token contract to local ganache
-    - The test will then initialize the Basket token with each of the underlying tokens
+    - The test will then initialize the Bskt token with each of the underlying tokens
  */
 
 const P = require('bluebird');

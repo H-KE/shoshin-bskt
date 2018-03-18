@@ -2,7 +2,7 @@ const P = require('bluebird');
 const glob = require('glob');
 
 const TokenA = artifacts.require('TokenA');
-const BasketToken = artifacts.require('BasketToken');
+const BsktToken = artifacts.require('BsktToken');
 
 const {ETW_DECIMALS} = require('./constants');
 const {toBU} = require('./utils');
@@ -11,7 +11,7 @@ const provider = new web3.providers.HttpProvider("http://localhost:7545");
 const globPromise = P.promisify(glob);
 
 const GRANULARITY = 10 ** 16;
-const GRAINS_PER_BASKET = (10 ** ETW_DECIMALS) / GRANULARITY;
+const GRAINS_PER_bskt = (10 ** ETW_DECIMALS) / GRANULARITY;
 
 let mockToken;
 
@@ -24,169 +24,169 @@ function conditionalIt(title, test) {
 }
 
 /**
- * Test balances and total supply for basket contract, buyer and owner during creation process
+ * Test balances and total supply for bskt contract, buyer and owner during creation process
  */
-async function testCreationTokenState(basketToken, underlyingToken, owner, buyer, contractName) {
-  const initialContractBalance = await underlyingToken.balanceOf(basketToken.address);
+async function testCreationTokenState(bsktToken, underlyingToken, owner, buyer, contractName) {
+  const initialContractBalance = await underlyingToken.balanceOf(bsktToken.address);
   const initialBuyerBalance = await underlyingToken.balanceOf(buyer);
-  const initialTotalSupply = await basketToken.totalSupply();
+  const initialTotalSupply = await bsktToken.totalSupply();
   assert.equal(initialContractBalance.toNumber(), 0, `contract should have no ${contractName}`);
-  assert.equal(initialBuyerBalance.toNumber(), 100 * GRAINS_PER_BASKET, `buyer should have some ${contractName} token`);
-  assert.equal(initialTotalSupply.toNumber(), 0, `Basket contract should have 0 total supply after creation`);
+  assert.equal(initialBuyerBalance.toNumber(), 100 * GRAINS_PER_bskt, `buyer should have some ${contractName} token`);
+  assert.equal(initialTotalSupply.toNumber(), 0, `Bskt contract should have 0 total supply after creation`);
 
-  const txReceipt = await basketToken.create(toBU(1), {from: buyer});
+  const txReceipt = await bsktToken.create(toBU(1), {from: buyer});
 
-  const postCreateContractBalance = await underlyingToken.balanceOf(basketToken.address);
+  const postCreateContractBalance = await underlyingToken.balanceOf(bsktToken.address);
   const postCreateBuyerBalance = await underlyingToken.balanceOf(buyer);
-  const postCreateTotalSupply = await basketToken.totalSupply();
-  assert.equal(postCreateContractBalance.toNumber(), 100 * GRAINS_PER_BASKET, `contract should have 100 ${contractName}`);
+  const postCreateTotalSupply = await bsktToken.totalSupply();
+  assert.equal(postCreateContractBalance.toNumber(), 100 * GRAINS_PER_bskt, `contract should have 100 ${contractName}`);
   assert.equal(postCreateBuyerBalance.toNumber(), 0, `buyer should have no ${contractName} left`);
-  assert.equal(postCreateTotalSupply.toNumber(), toBU(1), `Basket contract should have correct supply after creation`);
+  assert.equal(postCreateTotalSupply.toNumber(), toBU(1), `Bskt contract should have correct supply after creation`);
 
-  const basketTokenBuyerBalance = await basketToken.balanceOf(buyer);
-  assert.equal(basketTokenBuyerBalance.toNumber(), toBU(1), 'buyer should have correct Basket token balance');
+  const bsktTokenBuyerBalance = await bsktToken.balanceOf(buyer);
+  assert.equal(bsktTokenBuyerBalance.toNumber(), toBU(1), 'buyer should have correct Bskt token balance');
 }
 
 contract('E2E token testing', function([owner, buyer]) {
-  let basketToken, underlyingTokensInstance;
+  let bsktToken, underlyingTokensInstance;
 
-  context('Basket with individual tokens', function() {
+  context('Bskt with individual tokens', function() {
     before(async function () {
       mockToken = await TokenA.new({from: owner});
     });
-    conditionalIt('should initialize Basket with ZRXToken successfully', async function() {
+    conditionalIt('should initialize Bskt with ZRXToken successfully', async function() {
       const contractName = 'ZRXToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with AElfToken successfully', async function() {
+    conditionalIt('should initialize Bskt with AElfToken successfully', async function() {
       const contractName = 'AElfToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with AEToken successfully', async function() {
+    conditionalIt('should initialize Bskt with AEToken successfully', async function() {
       const contractName = 'AEToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with RepToken successfully', async function() {
+    conditionalIt('should initialize Bskt with RepToken successfully', async function() {
       const contractName = 'RepToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with BAToken successfully', async function() {
+    conditionalIt('should initialize Bskt with BAToken successfully', async function() {
       const contractName = 'BAToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with BNB successfully', async function() {
+    conditionalIt('should initialize Bskt with BNB successfully', async function() {
       const contractName = 'BNB';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with Dragon successfully', async function() {
+    conditionalIt('should initialize Bskt with Dragon successfully', async function() {
       const contractName = 'Dragon';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with EOS successfully', async function() {
+    conditionalIt('should initialize Bskt with EOS successfully', async function() {
       const contractName = 'EOS';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with IcxToken successfully', async function() {
+    conditionalIt('should initialize Bskt with IcxToken successfully', async function() {
       const contractName = 'IcxToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with IOSToken successfully', async function() {
+    conditionalIt('should initialize Bskt with IOSToken successfully', async function() {
       const contractName = 'IOSToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with KyberNetworkCrystal successfully', async function() {
+    conditionalIt('should initialize Bskt with KyberNetworkCrystal successfully', async function() {
       const contractName = 'KyberNetworkCrystal';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with OMGToken successfully', async function() {
+    conditionalIt('should initialize Bskt with OMGToken successfully', async function() {
       const contractName = 'OMGToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with Populous successfully', async function() {
+    conditionalIt('should initialize Bskt with Populous successfully', async function() {
       const contractName = 'Populous';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with PowerLedger successfully', async function() {
+    conditionalIt('should initialize Bskt with PowerLedger successfully', async function() {
       const contractName = 'PowerLedger';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with QASHToken successfully', async function() {
+    conditionalIt('should initialize Bskt with QASHToken successfully', async function() {
       const contractName = 'QASHToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with QTUM successfully', async function() {
+    conditionalIt('should initialize Bskt with QTUM successfully', async function() {
       const contractName = 'HumanStandardToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with SNT successfully', async function() {
+    conditionalIt('should initialize Bskt with SNT successfully', async function() {
       const contractName = 'SNT';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with TronToken successfully', async function() {
+    conditionalIt('should initialize Bskt with TronToken successfully', async function() {
       const contractName = 'TronToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with VEN successfully', async function() {
+    conditionalIt('should initialize Bskt with VEN successfully', async function() {
       const contractName = 'VEN';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with WaltonToken successfully', async function() {
+    conditionalIt('should initialize Bskt with WaltonToken successfully', async function() {
       const contractName = 'WaltonToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with ZilliqaToken successfully', async function() {
+    conditionalIt('should initialize Bskt with ZilliqaToken successfully', async function() {
       const contractName = 'ZilliqaToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with DigixDao successfully', async function() {
+    conditionalIt('should initialize Bskt with DigixDao successfully', async function() {
       const contractName = 'DigixDao';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with BytomToken successfully', async function() {
+    conditionalIt('should initialize Bskt with BytomToken successfully', async function() {
       const contractName = 'BytomToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with Revain successfully', async function() {
+    conditionalIt('should initialize Bskt with Revain successfully', async function() {
       const contractName = 'Revain';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
-    conditionalIt('should initialize Basket with Bibox Token successfully', async function() {
+    conditionalIt('should initialize Bskt with Bibox Token successfully', async function() {
       const contractName = 'BIXToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
     conditionalIt('should initialize ETF with ADXToken successfully', async function() {
       const contractName = 'ADXToken';
       const result = await initializeSingleContract(contractName, owner, buyer);
-      await testCreationTokenState(result.basketToken, result.tokenInstances[0], owner, buyer, contractName);
+      await testCreationTokenState(result.bsktToken, result.tokenInstances[0], owner, buyer, contractName);
     });
   });
 
-  context('Basket with 20 token portfolio', async function() {
+  context('Bskt with 20 token portfolio', async function() {
     const tokensInfo = [
       {
         name: 'EOS',
@@ -273,71 +273,71 @@ contract('E2E token testing', function([owner, buyer]) {
     before(async function () {
       mockToken = await TokenA.new({from: owner});
     });
-    conditionalIt('should create then redeem Basket with all tokens', async function() {
+    conditionalIt('should create then redeem Bskt with all tokens', async function() {
       // Prepare tokens
       const contractNames = tokensInfo.map(token => token.name);
-      const tokenUnits = tokensInfo.map(token => token.units);
+      const quantity = tokensInfo.map(token => token.units);
       const result = await initializePortfolioContract(
         contractNames,
-        tokenUnits,
+        quantity,
         owner,
         buyer
       );
-      const basketToken = result.basketToken;
+      const bsktToken = result.bsktToken;
       const underlyingTokens = result.tokenInstances;
 
       // Test initial values
       for (let i = 0; i < underlyingTokens.length; i++) {
-        const initialContractBalance = await underlyingTokens[i].balanceOf(basketToken.address);
+        const initialContractBalance = await underlyingTokens[i].balanceOf(bsktToken.address);
         const initialBuyerBalance = await underlyingTokens[i].balanceOf(buyer);
         assert.equal(initialContractBalance.toNumber(), 0, `contract should have no ${contractNames[i]}`);
-        assert.equal(initialBuyerBalance.toNumber(), tokenUnits[i] * GRAINS_PER_BASKET, `buyer should have some ${contractNames[i]} token`);
+        assert.equal(initialBuyerBalance.toNumber(), quantity[i] * GRAINS_PER_bskt, `buyer should have some ${contractNames[i]} token`);
       }
 
-      const initialTotalSupply = await basketToken.totalSupply();
-      assert.equal(initialTotalSupply.toNumber(), 0, `Basket contract should have 0 total supply after creation`);
+      const initialTotalSupply = await bsktToken.totalSupply();
+      assert.equal(initialTotalSupply.toNumber(), 0, `Bskt contract should have 0 total supply after creation`);
 
-      // Create Basket
-      const createReceipt = await basketToken.create(web3.toWei(1, 'ether'), {from: buyer});
+      // Create Bskt
+      const createReceipt = await bsktToken.create(web3.toWei(1, 'ether'), {from: buyer});
       // Test post-creation values
       for (let i = 0; i < underlyingTokens.length; i++) {
-        const postCreateContractBalance = await underlyingTokens[i].balanceOf(basketToken.address);
+        const postCreateContractBalance = await underlyingTokens[i].balanceOf(bsktToken.address);
         const postCreateBuyerBalance = await underlyingTokens[i].balanceOf(buyer);
-        assert.equal(postCreateContractBalance.toNumber(), tokenUnits[i] * GRAINS_PER_BASKET, `contract should have correct amount of ${contractNames[i]} in 1 Basket`);
+        assert.equal(postCreateContractBalance.toNumber(), quantity[i] * GRAINS_PER_bskt, `contract should have correct amount of ${contractNames[i]} in 1 Bskt`);
         assert.equal(postCreateBuyerBalance.toNumber(), 0, `buyer should have no ${contractNames[i]} left`);
       }
-      const postCreateTotalSupply = await basketToken.totalSupply();
-      const basketTokenBuyerBalancePostCreate = await basketToken.balanceOf(buyer);
-      assert.equal(postCreateTotalSupply.toNumber(), toBU(1), `Basket contract should have correct supply after creation`);
-      assert.equal(basketTokenBuyerBalancePostCreate.toNumber(), toBU(1), 'buyer should have correct Basket token balance');
+      const postCreateTotalSupply = await bsktToken.totalSupply();
+      const bsktTokenBuyerBalancePostCreate = await bsktToken.balanceOf(buyer);
+      assert.equal(postCreateTotalSupply.toNumber(), toBU(1), `Bskt contract should have correct supply after creation`);
+      assert.equal(bsktTokenBuyerBalancePostCreate.toNumber(), toBU(1), 'buyer should have correct Bskt token balance');
 
-      // Redeem Basket
-      const redeemReceipt = await basketToken.redeem(toBU(1), [], {from: buyer});
+      // Redeem Bskt
+      const redeemReceipt = await bsktToken.redeem(toBU(1), [], {from: buyer});
 
       // Test post-redemption values
       for (let i = 0; i < underlyingTokens.length; i++) {
-        const postRedeemContractBalance = await underlyingTokens[i].balanceOf(basketToken.address);
+        const postRedeemContractBalance = await underlyingTokens[i].balanceOf(bsktToken.address);
         const postRedeemBuyerBalance = await underlyingTokens[i].balanceOf(buyer);
         assert.equal(postRedeemContractBalance.toNumber(), 0, `contract should have no ${contractNames[i]} left`);
-        assert.equal(postRedeemBuyerBalance.toNumber(), tokenUnits[i] * GRAINS_PER_BASKET, `buyer should have the same ${contractNames[i]} balance initially`);
+        assert.equal(postRedeemBuyerBalance.toNumber(), quantity[i] * GRAINS_PER_bskt, `buyer should have the same ${contractNames[i]} balance initially`);
       }
-      const postRedeemTotalSupply = await basketToken.totalSupply();
-      const basketTokenBuyerBalancePostRedeem = await basketToken.balanceOf(buyer);
+      const postRedeemTotalSupply = await bsktToken.totalSupply();
+      const bsktTokenBuyerBalancePostRedeem = await bsktToken.balanceOf(buyer);
 
-      assert.equal(postRedeemTotalSupply.toNumber(), 0, `Basket contract should have no token after redemption`);
-      assert.equal(basketTokenBuyerBalancePostRedeem.toNumber(), 0, 'buyer should have no Basket token');
+      assert.equal(postRedeemTotalSupply.toNumber(), 0, `Bskt contract should have no token after redemption`);
+      assert.equal(bsktTokenBuyerBalancePostRedeem.toNumber(), 0, 'buyer should have no Bskt token');
     });
   });
 });
 
 
-async function initializePortfolioContract(contractNames, tokenUnits, owner, buyer) {
+async function initializePortfolioContract(contractNames, quantity, owner, buyer) {
   try {
     const deployPromises = contractNames.map((contractName) => {
       return deployUnderlyingToken(owner, contractName);
     });
     const instances = await P.all(deployPromises);
-    const result = await setupBasketToken(owner, buyer, instances, tokenUnits, contractNames);
+    const result = await setupBsktToken(owner, buyer, instances, quantity, contractNames);
     return result;
   } catch(e) {
     assert.ifError(e);
@@ -347,7 +347,7 @@ async function initializePortfolioContract(contractNames, tokenUnits, owner, buy
 async function initializeSingleContract(contractName, owner, buyer) {
   try {
     const instance = await deployUnderlyingToken(owner, contractName);
-    const result = await setupBasketToken(owner, buyer, [instance], null, [contractName]);
+    const result = await setupBsktToken(owner, buyer, [instance], null, [contractName]);
     return result;
   } catch(e) {
     assert.ifError(e);
@@ -371,47 +371,49 @@ async function deployUnderlyingToken(owner, contractName) {
 }
 
 /**
- * Setup Basket token with an underlying token instance
+ * Setup Bskt token with an underlying token instance
  * @param  {address} owner          Address of contract owner
  * @param  {address} buyer          Address of buyer
  * @param  {[ContractInstance]} tokenInstances Instances of deployed underlying token contracts
- * @param  {[string]} tokenCountList Count of Each token per Basket
+ * @param  {[string]} tokenCountList Count of Each token per Bskt
  * @param  {[string]} contractNames   Name of deployed contract
- * @return {}                Basket token instance and deployed underlying token instance
+ * @return {}                Bskt token instance and deployed underlying token instance
  */
-async function setupBasketToken(owner, buyer, tokenInstances, tokenCountList, contractNames) {
+async function setupBsktToken(owner, buyer, tokenInstances, tokenCountList, contractNames) {
   if (!tokenCountList) {
     tokenCountList = Array.from({length: tokenInstances.length}, () => 100);
   }
-  const basketToken = await BasketToken.new(
+  const bsktToken = await BsktToken.new(
     tokenInstances.map(token => token.address),
     tokenCountList,
     GRANULARITY,
+    'Basket',
+    'BSK',
     {from: owner}
   );
 
-  await prepUnderlyingTokensForTransfer(owner, buyer, tokenInstances, tokenCountList, contractNames, basketToken);
+  await prepUnderlyingTokensForTransfer(owner, buyer, tokenInstances, tokenCountList, contractNames, bsktToken);
 
   return {
-    basketToken,
+    bsktToken,
     tokenInstances
   };
 }
 
 /**
- * Enable buyer transfering tokens to basket contract
+ * Enable buyer transfering tokens to bskt contract
  * @param  {address} owner          Owner's address
  * @param  {address} buyer          Buyer's address
  * @param  {[ContractInstance]} tokenInstances Deployed token contract instances
  * @param  {[string]} contractNames   Token Contract Name
- * @param  {ContractInstance} basketToken   Deployed basket token contract instance
+ * @param  {ContractInstance} bsktToken   Deployed bskt token contract instance
  */
-async function prepUnderlyingTokensForTransfer(owner, buyer, tokenInstances, tokenCountList, contractNames, basketToken) {
+async function prepUnderlyingTokensForTransfer(owner, buyer, tokenInstances, tokenCountList, contractNames, bsktToken) {
   // cannot do await properly in a forEach loop
   for (let i = 0; i < tokenInstances.length; i++) {
     try {
       const tokenUnit = tokenCountList[i];
-      const unitsToTransfer = tokenUnit * GRAINS_PER_BASKET;
+      const unitsToTransfer = tokenUnit * GRAINS_PER_bskt;
       const contractName = contractNames[i];
 
       switch(contractName) {
@@ -461,7 +463,7 @@ async function prepUnderlyingTokensForTransfer(owner, buyer, tokenInstances, tok
           break;
       }
       await tokenInstances[i].approve(
-        basketToken.address,
+        bsktToken.address,
         unitsToTransfer,
         {from: buyer}
       );

@@ -6,7 +6,7 @@ const deployConfig = require("../config/deploy-config.js")
 const secrets = require("../config/secrets.json")
 
 let MultiSigWallet = artifacts.require("MultiSigWallet");
-let BasketToken = artifacts.require("BasketToken");
+let BsktToken = artifacts.require("BsktToken");
 let TokenA = artifacts.require("TokenA");
 let TokenB = artifacts.require("TokenB");
 
@@ -20,8 +20,8 @@ function loadConfig(network) {
   web3.setProvider(provider);
 }
 
-/// @notice Deploys multisig wallet, then the BasketToken, then sets the owner of
-/// the Basket to the multisig to the specified network
+/// @notice Deploys multisig wallet, then the BsktToken, then sets the owner of
+/// the Bskt to the multisig to the specified network
 /// @param deployer {Object} Deployer object from Truffle
 /// @param network {string} String representing network from Truffle
 /// @param accounts {Array} Accounts array from Truffle
@@ -31,14 +31,16 @@ function deploy(deployer, network, accounts, callback) {
   let tokenA;
   let tokenB;
   let multisig;
-  let basketToken;
+  let bsktToken;
 
   const deployFrom = secrets.deploy.coinbase;
   const owners = deployConfig[network].multisig.owners;
   const required = deployConfig[network].multisig.required;
   const tokenAddresses = deployConfig[network].tokenAddresses;
   const quantities = deployConfig[network].quantities;
-  const granularity = deployConfig[network].granularity;
+  const creationUnit = deployConfig[network].creationUnit;
+  const name = deployConfig[network].name;
+  const symbol = deployConfig[network].symbol;
 
   deployer.then(function() {
     console.log(owners);
@@ -46,12 +48,12 @@ function deploy(deployer, network, accounts, callback) {
   }).then(function(_multisig) {
     multisig = _multisig;
     console.log("multisig address", multisig.address);
-    return BasketToken.new(tokenAddresses, quantities, granularity);
-  }).then(function(_basketToken) {
-    basketToken = _basketToken;
-    return basketToken.transferOwnership(multisig.address);
+    return BsktToken.new(tokenAddresses, quantities, creationUnit, name, symbol);
+  }).then(function(_bsktToken) {
+    bsktToken = _bsktToken;
+    return bsktToken.transferOwnership(multisig.address);
   }).then(function() {
-    callback({tokenA, tokenB, multisig, basketToken});
+    callback({tokenA, tokenB, multisig, bsktToken});
   });
 };
 
@@ -61,7 +63,7 @@ module.exports = function(deployer, network, accounts) {
 
   if (network == "development") {
     deploy(deployer, network, accounts, function(deployed) {
-      deployed.basketToken.owner.call().then(function(e) {
+      deployed.bsktToken.owner.call().then(function(e) {
         console.log("Owner address", e);
         console.log("MultiSigWallet address", deployed.multisig.address);
         console.log("Done");

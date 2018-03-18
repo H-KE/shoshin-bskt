@@ -1,8 +1,7 @@
 {
-  "name": "basket",
+  "name": "bskt",
   "version": "1.0.0",
-  "description": "Basket Token for crypto currency",
-  "main": "truffle-config.js",
+  "description": "Bskt Token for crypto currency",
   "directories": {
     "test": "test"
   },
@@ -11,8 +10,8 @@
     "lint": "solium --dir ./contracts",
     "test:prep": "npm run lint && npm run ganache-cli:dev",
     "test:e2eprep": "npm run update-module && node scripts/compile-contract.js",
-    "test:js": "npm run test:prep && truffle test --network rpc ./test/BasketToken.test.js",
-    "test:sol": "npm run test:prep && truffle test --network rpc ./test/TestBasketToken.sol",
+    "test:js": "npm run test:prep && truffle test --network rpc ./test/BsktToken.test.js",
+    "test:sol": "npm run test:prep && truffle test --network rpc ./test/TestBsktToken.sol",
     "test:e2e": "npm run test:e2eprep && npm run test:prep && TEST_ENV=e2e truffle test --network rpc ./test/E2E.test.js",
     "test:js:gas": "GAS_REPORTER=true npm run test:js",
     "test": "npm run test:prep && npm run test:js && npm run test:sol",
@@ -52,10 +51,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CryptoFinInc/basket.git"
+    "url": "git+https://github.com/CryptoFinInc/bskt.git"
   },
   "bugs": {
-    "url": "https://github.com/CryptoFinInc/basket/issues"
+    "url": "https://github.com/CryptoFinInc/bskt/issues"
   },
-  "homepage": "https://github.com/CryptoFinInc/basket#readme"
+  "homepage": "https://github.com/CryptoFinInc/bskt#readme"
 }
